@@ -1,7 +1,7 @@
 name: shared_ui_kit
 description: "Shared UI kit with stateful components for company apps"
 version: 0.0.1
-homepage:
+homepage: https://github.com/tanay388/shared_ui_kit
 
 environment:
   sdk: ^3.10.7
