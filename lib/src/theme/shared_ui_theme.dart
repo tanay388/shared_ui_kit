@@ -17,7 +17,6 @@ class SharedUiThemeData {
   final SharedUiTypography typography;
 
   static const light = SharedUiThemeData();
-  static const dark = SharedUiThemeData(colors: SharedUiColors.dark);
 }
 
 class SharedUiTheme extends InheritedWidget {
