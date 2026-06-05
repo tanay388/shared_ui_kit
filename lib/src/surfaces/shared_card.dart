@@ -11,8 +11,6 @@ class SharedCard extends StatelessWidget {
     this.onTap,
     this.elevated = false,
     this.selected = false,
-    this.asymmetric = false,
-    this.glow = false,
   });
 
   final Widget child;
@@ -20,39 +18,29 @@ class SharedCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool elevated;
   final bool selected;
-  final bool asymmetric;
-  final bool glow;
 
   @override
   Widget build(BuildContext context) {
     final theme = SharedUiTheme.of(context);
-    final radius = asymmetric ? theme.radius.asymmetric : BorderRadius.circular(theme.radius.lg);
+    final radius = BorderRadius.circular(theme.radius.lg);
     final border = Border.all(
       color: selected ? theme.colors.primary : theme.colors.border,
       width: selected ? 2 : 1.5,
     );
 
-    final shadows = <BoxShadow>[
-      if (elevated)
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.18),
-          blurRadius: 24,
-          offset: const Offset(0, 10),
-        ),
-      if (glow || (elevated && selected))
-        BoxShadow(
-          color: theme.colors.accentGlow,
-          blurRadius: 28,
-          spreadRadius: -4,
-          offset: const Offset(-6, 8),
-        ),
-    ];
-
     final decoration = BoxDecoration(
       color: theme.colors.surface,
       borderRadius: radius,
       border: border,
-      boxShadow: shadows.isEmpty ? null : shadows,
+      boxShadow: elevated
+          ? [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ]
+          : null,
     );
 
     final content = Padding(

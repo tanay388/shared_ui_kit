@@ -12,7 +12,7 @@ class DemoApp extends StatelessWidget {
       title: 'shared_ui_kit demo',
       debugShowCheckedModeBanner: false,
       home: SharedUiTheme(
-        data: SharedUiThemeData.turanta,
+        data: SharedUiThemeData.light,
         child: const DemoHome(),
       ),
     );
@@ -90,150 +90,126 @@ class _DemoHomeState extends State<DemoHome> {
     final theme = SharedUiTheme.of(context);
     return Scaffold(
       backgroundColor: theme.colors.background,
-      body: SharedAtmosphere(
-        intensity: SharedAtmosphereIntensity.hero,
-        child: SafeArea(
-          child: ListView(
-            padding: EdgeInsets.all(theme.spacing.lg),
-            children: [
-              SharedStaggerReveal(
-                children: [
-                  const SharedAccentRule(),
-                  SizedBox(height: theme.spacing.md),
-                  SharedDisplayText(
-                    'Turanta UI',
-                    color: theme.colors.onSecondary,
-                  ),
-                  SizedBox(height: theme.spacing.xs),
-                  Text(
-                    'Kinetic cyan on black — Unbounded + Spline Sans',
-                    style: theme.typography.body.copyWith(color: theme.colors.muted),
-                  ),
-                  SizedBox(height: theme.spacing.xl),
-                  Transform.translate(
-                    offset: Offset(theme.spacing.sm, 0),
-                    child: SharedCard(
-                      asymmetric: true,
-                      elevated: true,
-                      glow: true,
+      appBar: AppBar(
+        title: const Text('shared_ui_kit'),
+        backgroundColor: theme.colors.surface,
+        foregroundColor: theme.colors.onSurface,
+        elevation: 0,
+      ),
+      body: ListView(
+        padding: EdgeInsets.all(theme.spacing.lg),
+        children: [
+          SharedCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const SharedAvatar(initials: 'TD', isOnline: true),
+                    SizedBox(width: theme.spacing.md),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              const SharedAvatar(initials: 'TD', isOnline: true),
-                              SizedBox(width: theme.spacing.md),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Tanay D.', style: theme.typography.title),
-                                    Text(
-                                      'Admin · just now',
-                                      style: theme.typography.caption
-                                          .copyWith(color: theme.colors.muted),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SharedBadge(label: 'PRO', tone: SharedBadgeTone.primary),
-                            ],
-                          ),
-                          SizedBox(height: theme.spacing.lg),
-                          SharedTextField(
-                            controller: _email,
-                            label: 'Email',
-                            hint: 'you@company.com',
-                            prefixIcon: Icons.mail_outline,
-                            errorText: _emailError,
-                            isDisabled: _saving,
-                          ),
-                          SizedBox(height: theme.spacing.md),
-                          SharedPasswordField(
-                            controller: _password,
-                            label: 'Password',
-                            hint: 'Your password',
-                            isDisabled: _saving,
-                          ),
-                          SizedBox(height: theme.spacing.lg),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: LoaderButton(
-                                  label: 'Save changes',
-                                  isLoading: _saving,
-                                  onPressed: _onSave,
-                                  icon: Icons.check,
-                                  expand: true,
-                                ),
-                              ),
-                              SizedBox(width: theme.spacing.sm),
-                              LoaderIconButton(
-                                icon: _favourited ? Icons.favorite : Icons.favorite_border,
-                                variant: SharedButtonVariant.secondary,
-                                onPressed: () => setState(() => _favourited = !_favourited),
-                              ),
-                              SizedBox(width: theme.spacing.sm),
-                              LoaderButton(
-                                label: 'Delete',
-                                variant: SharedButtonVariant.danger,
-                                onPressed: () => showSharedConfirmDialog(
-                                  context: context,
-                                  title: 'Delete account?',
-                                  message: 'This action cannot be undone.',
-                                  tone: SharedDialogTone.danger,
-                                  confirmLabel: 'Delete',
-                                  onConfirm: () =>
-                                      Future.delayed(const Duration(seconds: 1)),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: theme.spacing.md),
-                          Wrap(
-                            spacing: theme.spacing.xs,
-                            runSpacing: theme.spacing.xs,
-                            children: const [
-                              SharedChip(label: 'Flutter', selected: true),
-                              SharedChip(label: 'Dart'),
-                              SharedChip(label: 'Loading', isLoading: true),
-                              SharedChip(label: 'Disabled', isDisabled: true),
-                            ],
-                          ),
+                          Text('Tanay D.', style: theme.typography.title),
+                          Text('Admin · just now',
+                              style: theme.typography.caption
+                                  .copyWith(color: theme.colors.muted)),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(height: theme.spacing.lg),
-                  Text('SuperList', style: theme.typography.title.copyWith(color: theme.colors.onSecondary)),
-                  SizedBox(height: theme.spacing.sm),
-                  SharedCard(
-                    padding: EdgeInsets.zero,
-                    asymmetric: true,
-                    child: SizedBox(
-                      height: 360,
-                      child: SuperList<String>(
-                        items: _items,
-                        status: _listStatus,
-                        onRefresh: _refresh,
-                        onLoadMore: _loadMore,
-                        onRetry: _loadInitial,
-                        itemBuilder: (context, i) => SuperListTile(
-                          title: _items[i],
-                          subtitle: 'Tap to mark as read',
-                          leading: const SharedAvatar(initials: 'A', size: SharedAvatarSize.sm),
-                          trailing: const SharedBadge(label: 'NEW', tone: SharedBadgeTone.info),
-                          onTap: () {},
-                        ),
+                    const SharedBadge(label: 'PRO', tone: SharedBadgeTone.primary),
+                  ],
+                ),
+                SizedBox(height: theme.spacing.lg),
+                SharedTextField(
+                  controller: _email,
+                  label: 'Email',
+                  hint: 'you@company.com',
+                  prefixIcon: Icons.mail_outline,
+                  errorText: _emailError,
+                  isDisabled: _saving,
+                ),
+                SizedBox(height: theme.spacing.md),
+                SharedPasswordField(
+                  controller: _password,
+                  label: 'Password',
+                  hint: 'Your password',
+                  isDisabled: _saving,
+                ),
+                SizedBox(height: theme.spacing.lg),
+                Row(
+                  children: [
+                    Expanded(
+                      child: LoaderButton(
+                        label: 'Save changes',
+                        isLoading: _saving,
+                        onPressed: _onSave,
+                        icon: Icons.check,
+                        expand: true,
                       ),
                     ),
-                  ),
-                  SizedBox(height: theme.spacing.xl),
-                ],
-              ),
-            ],
+                    SizedBox(width: theme.spacing.sm),
+                    LoaderIconButton(
+                      icon: _favourited ? Icons.favorite : Icons.favorite_border,
+                      variant: SharedButtonVariant.secondary,
+                      onPressed: () => setState(() => _favourited = !_favourited),
+                    ),
+                    SizedBox(width: theme.spacing.sm),
+                    LoaderButton(
+                      label: 'Delete',
+                      variant: SharedButtonVariant.danger,
+                      onPressed: () => showSharedConfirmDialog(
+                        context: context,
+                        title: 'Delete account?',
+                        message: 'This action cannot be undone.',
+                        tone: SharedDialogTone.danger,
+                        confirmLabel: 'Delete',
+                        onConfirm: () =>
+                            Future.delayed(const Duration(seconds: 1)),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: theme.spacing.md),
+                Wrap(
+                  spacing: theme.spacing.xs,
+                  runSpacing: theme.spacing.xs,
+                  children: const [
+                    SharedChip(label: 'Flutter', selected: true),
+                    SharedChip(label: 'Dart'),
+                    SharedChip(label: 'Loading', isLoading: true),
+                    SharedChip(label: 'Disabled', isDisabled: true),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
+          SizedBox(height: theme.spacing.lg),
+          Text('SuperList', style: theme.typography.title),
+          SizedBox(height: theme.spacing.sm),
+          SharedCard(
+            padding: EdgeInsets.zero,
+            child: SizedBox(
+              height: 360,
+              child: SuperList<String>(
+                items: _items,
+                status: _listStatus,
+                onRefresh: _refresh,
+                onLoadMore: _loadMore,
+                onRetry: _loadInitial,
+                itemBuilder: (context, i) => SuperListTile(
+                  title: _items[i],
+                  subtitle: 'Tap to mark as read',
+                  leading: const SharedAvatar(initials: 'A', size: SharedAvatarSize.sm),
+                  trailing: const SharedBadge(label: 'NEW', tone: SharedBadgeTone.info),
+                  onTap: () {},
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: theme.spacing.xl),
+        ],
       ),
     );
   }

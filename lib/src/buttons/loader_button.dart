@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../motion/pressable_scale.dart';
 import '../theme/shared_ui_theme.dart';
 
 /// Visual style of a [LoaderButton].
@@ -44,7 +43,6 @@ class LoaderButton extends StatelessWidget {
     final theme = SharedUiTheme.of(context);
     final colors = theme.colors;
 
-    final useGradient = variant == SharedButtonVariant.primary && _interactive;
     final bg = switch (variant) {
       SharedButtonVariant.primary => colors.primary,
       SharedButtonVariant.secondary => colors.secondary,
@@ -88,32 +86,16 @@ class LoaderButton extends StatelessWidget {
             ],
           );
 
-    final radius = BorderRadius.circular(theme.radius.md);
-    final glow = variant == SharedButtonVariant.primary && _interactive
-        ? [
-            BoxShadow(
-              color: colors.accentGlow,
-              blurRadius: 20,
-              offset: const Offset(0, 6),
-            ),
-          ]
-        : null;
-
-    final surface = DecoratedBox(
-      decoration: BoxDecoration(
-        color: useGradient ? null : effectiveBg,
-        gradient: useGradient ? theme.gradients.primaryButton : null,
-        borderRadius: radius,
-        boxShadow: glow,
-      ),
+    return Semantics(
+      button: true,
+      enabled: _interactive,
+      label: label,
       child: Material(
-        type: MaterialType.transparency,
-        borderRadius: radius,
+        color: effectiveBg,
+        borderRadius: BorderRadius.circular(theme.radius.md),
         child: InkWell(
           onTap: _interactive ? onPressed : null,
-          borderRadius: radius,
-          splashColor: effectiveFg.withValues(alpha: 0.12),
-          highlightColor: effectiveFg.withValues(alpha: 0.06),
+          borderRadius: BorderRadius.circular(theme.radius.md),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: minHeight),
             child: Padding(
@@ -122,16 +104,6 @@ class LoaderButton extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-
-    return Semantics(
-      button: true,
-      enabled: _interactive,
-      label: label,
-      child: PressableScale(
-        enabled: _interactive,
-        child: surface,
       ),
     );
   }
@@ -182,29 +154,26 @@ class LoaderIconButton extends StatelessWidget {
       SharedButtonVariant.danger => theme.colors.onPrimary,
     };
 
-    final btn = PressableScale(
-      enabled: interactive,
-      child: Material(
-        color: interactive ? bg : bg.withValues(alpha: 0.5),
-        shape: const CircleBorder(),
-        child: InkWell(
-          onTap: interactive ? onPressed : null,
-          customBorder: const CircleBorder(),
-          child: SizedBox(
-            width: dim,
-            height: dim,
-            child: Center(
-              child: isLoading
-                  ? SizedBox(
-                      width: iconSize,
-                      height: iconSize,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation(fg),
-                      ),
-                    )
-                  : Icon(icon, size: iconSize, color: interactive ? fg : fg.withValues(alpha: 0.7)),
-            ),
+    final btn = Material(
+      color: interactive ? bg : bg.withValues(alpha: 0.5),
+      shape: const CircleBorder(),
+      child: InkWell(
+        onTap: interactive ? onPressed : null,
+        customBorder: const CircleBorder(),
+        child: SizedBox(
+          width: dim,
+          height: dim,
+          child: Center(
+            child: isLoading
+                ? SizedBox(
+                    width: iconSize,
+                    height: iconSize,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation(fg),
+                    ),
+                  )
+                : Icon(icon, size: iconSize, color: interactive ? fg : fg.withValues(alpha: 0.7)),
           ),
         ),
       ),

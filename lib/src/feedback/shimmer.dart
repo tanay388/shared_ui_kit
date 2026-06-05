@@ -28,7 +28,7 @@ class _ShimmerBoxState extends State<ShimmerBox>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1400),
+      duration: const Duration(milliseconds: 1200),
     )..repeat();
   }
 
@@ -41,6 +41,8 @@ class _ShimmerBoxState extends State<ShimmerBox>
   @override
   Widget build(BuildContext context) {
     final theme = SharedUiTheme.of(context);
+    final base = theme.colors.border;
+    final highlight = theme.colors.surface;
     final radius = widget.borderRadius ?? BorderRadius.circular(theme.radius.sm);
 
     return AnimatedBuilder(
@@ -52,10 +54,10 @@ class _ShimmerBoxState extends State<ShimmerBox>
           decoration: BoxDecoration(
             borderRadius: radius,
             gradient: LinearGradient(
-              begin: Alignment(-1.2 + _controller.value * 2.4, 0),
-              end: Alignment(1.2 + _controller.value * 2.4, 0),
-              colors: (theme.gradients.shimmer as LinearGradient).colors,
-              stops: const [0.0, 0.35, 0.5, 1.0],
+              begin: Alignment(-1.0 + _controller.value * 2, 0),
+              end: Alignment(1.0 + _controller.value * 2, 0),
+              colors: [base, highlight, base],
+              stops: const [0.1, 0.5, 0.9],
             ),
           ),
         );

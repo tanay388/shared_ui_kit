@@ -21,7 +21,6 @@ class SharedUiColors {
     required this.warning,
     required this.info,
     required this.disabled,
-    required this.accentGlow,
   });
 
   final Color primary;
@@ -38,7 +37,6 @@ class SharedUiColors {
   final Color warning;
   final Color info;
   final Color disabled;
-  final Color accentGlow;
 
   /// Turanta brand cyan — matches the logo accent.
   static const brandCyan = Color(0xFF00CCFF);
@@ -58,7 +56,6 @@ class SharedUiColors {
     warning: Color(0xFFE65100),
     info: Color(0xFF0097C7),
     disabled: Color(0xFFB0BEC5),
-    accentGlow: Color(0x6600CCFF),
   );
 
   static const dark = SharedUiColors(
@@ -76,27 +73,6 @@ class SharedUiColors {
     warning: Color(0xFFFFB74D),
     info: brandCyan,
     disabled: Color(0xFF4A4A4A),
-    accentGlow: Color(0x8800CCFF),
-  );
-
-  /// Turanta consumer brand — black-dominant canvas, cyan as sharp accent,
-  /// crisp light surfaces for content cards (asymmetric overlap layouts).
-  static const turanta = SharedUiColors(
-    primary: brandCyan,
-    onPrimary: Color(0xFF000000),
-    secondary: Color(0xFF101010),
-    onSecondary: Color(0xFFE8F9FF),
-    surface: Color(0xFFFAFCFD),
-    onSurface: Color(0xFF050505),
-    background: Color(0xFF000000),
-    border: Color(0xFF2A2A2A),
-    muted: Color(0xFF8A9399),
-    danger: Color(0xFFFF5252),
-    success: Color(0xFF69F0AE),
-    warning: Color(0xFFFFAB40),
-    info: brandCyan,
-    disabled: Color(0xFF3A3A3A),
-    accentGlow: Color(0x9900CCFF),
   );
 }
 
@@ -126,25 +102,17 @@ class SharedUiRadius {
     this.md = 12,
     this.lg = 18,
     this.pill = 999,
-    this.asymmetric = const BorderRadius.only(
-      topLeft: Radius.circular(22),
-      topRight: Radius.circular(10),
-      bottomLeft: Radius.circular(14),
-      bottomRight: Radius.circular(22),
-    ),
   });
 
   final double sm;
   final double md;
   final double lg;
   final double pill;
-  final BorderRadius asymmetric;
 }
 
 @immutable
 class SharedUiTypography {
   const SharedUiTypography({
-    this.display = const TextStyle(fontSize: 32, fontWeight: FontWeight.w800, height: 1.1),
     this.title = const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.25),
     this.body = const TextStyle(fontSize: 16, height: 1.45),
     this.label = const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
@@ -152,7 +120,6 @@ class SharedUiTypography {
     this.button = const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
   });
 
-  final TextStyle display;
   final TextStyle title;
   final TextStyle body;
   final TextStyle label;
