@@ -30,7 +30,7 @@ class SharedChip extends StatelessWidget {
     final interactive = !isLoading && !isDisabled;
 
     final bg = selected
-        ? theme.colors.primary.withValues(alpha: 0.12)
+        ? theme.colors.primary.withValues(alpha: 0.18)
         : theme.colors.secondary;
     final fg = selected ? theme.colors.primary : theme.colors.onSecondary;
     final borderColor = selected ? theme.colors.primary : theme.colors.border;
@@ -45,8 +45,8 @@ class SharedChip extends StatelessWidget {
           onTap: interactive ? onTap : null,
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: theme.spacing.md,
-              vertical: theme.spacing.xs,
+              horizontal: theme.spacing.lg,
+              vertical: theme.spacing.sm,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -55,8 +55,8 @@ class SharedChip extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(right: theme.spacing.xs),
                     child: SizedBox(
-                      width: 12,
-                      height: 12,
+                      width: 14,
+                      height: 14,
                       child: CircularProgressIndicator(
                         strokeWidth: 1.5,
                         valueColor: AlwaysStoppedAnimation(fg),
@@ -66,14 +66,14 @@ class SharedChip extends StatelessWidget {
                 else if (leadingIcon != null)
                   Padding(
                     padding: EdgeInsets.only(right: theme.spacing.xs),
-                    child: Icon(leadingIcon, size: 14, color: fg),
+                    child: Icon(leadingIcon, size: 16, color: fg),
                   ),
-                Text(label, style: theme.typography.caption.copyWith(color: fg, fontWeight: FontWeight.w600)),
+                Text(label, style: theme.typography.label.copyWith(color: fg)),
                 if (onRemove != null) ...[
                   SizedBox(width: theme.spacing.xs),
                   GestureDetector(
                     onTap: interactive ? onRemove : null,
-                    child: Icon(Icons.close, size: 14, color: fg),
+                    child: Icon(Icons.close, size: 16, color: fg),
                   ),
                 ],
               ],

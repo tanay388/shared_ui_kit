@@ -22,7 +22,7 @@ class SharedBadge extends StatelessWidget {
     final colors = theme.colors;
     final (bg, fg) = switch (tone) {
       SharedBadgeTone.neutral => (colors.secondary, colors.onSecondary),
-      SharedBadgeTone.primary => (colors.primary.withValues(alpha: 0.12), colors.primary),
+      SharedBadgeTone.primary => (colors.primary.withValues(alpha: 0.18), colors.primary),
       SharedBadgeTone.success => (colors.success.withValues(alpha: 0.12), colors.success),
       SharedBadgeTone.warning => (colors.warning.withValues(alpha: 0.12), colors.warning),
       SharedBadgeTone.danger => (colors.danger.withValues(alpha: 0.12), colors.danger),
@@ -31,8 +31,8 @@ class SharedBadge extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: theme.spacing.sm,
-        vertical: theme.spacing.xs,
+        horizontal: theme.spacing.md,
+        vertical: theme.spacing.sm,
       ),
       decoration: BoxDecoration(
         color: bg,
@@ -42,10 +42,10 @@ class SharedBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 12, color: fg),
+            Icon(icon, size: 14, color: fg),
             SizedBox(width: theme.spacing.xs),
           ],
-          Text(label, style: theme.typography.caption.copyWith(color: fg, fontWeight: FontWeight.w600)),
+          Text(label, style: theme.typography.label.copyWith(color: fg)),
         ],
       ),
     );

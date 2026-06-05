@@ -86,7 +86,10 @@ class _SharedDialogState extends State<_SharedDialog> {
             Text(widget.title, style: theme.typography.title.copyWith(color: theme.colors.onSurface)),
             if (widget.message != null) ...[
               SizedBox(height: theme.spacing.sm),
-              Text(widget.message!, style: theme.typography.body.copyWith(color: theme.colors.muted)),
+              Text(
+                widget.message!,
+                style: theme.typography.body.copyWith(color: theme.colors.onSurface.withValues(alpha: 0.75)),
+              ),
             ],
             SizedBox(height: theme.spacing.xl),
             Row(

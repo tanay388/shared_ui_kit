@@ -21,6 +21,7 @@ class SharedUiColors {
     required this.warning,
     required this.info,
     required this.disabled,
+    required this.accentGlow,
   });
 
   final Color primary;
@@ -37,51 +38,77 @@ class SharedUiColors {
   final Color warning;
   final Color info;
   final Color disabled;
+  final Color accentGlow;
+
+  /// Turanta brand cyan — matches the logo accent.
+  static const brandCyan = Color(0xFF00CCFF);
 
   static const light = SharedUiColors(
-    primary: Color(0xFF2563EB),
-    onPrimary: Color(0xFFFFFFFF),
-    secondary: Color(0xFFE5E7EB),
-    onSecondary: Color(0xFF111827),
+    primary: brandCyan,
+    onPrimary: Color(0xFF000000),
+    secondary: Color(0xFFE6F9FF),
+    onSecondary: Color(0xFF0A0A0A),
     surface: Color(0xFFFFFFFF),
-    onSurface: Color(0xFF111827),
-    background: Color(0xFFF9FAFB),
-    border: Color(0xFFE5E7EB),
-    muted: Color(0xFF6B7280),
-    danger: Color(0xFFDC2626),
-    success: Color(0xFF16A34A),
-    warning: Color(0xFFD97706),
-    info: Color(0xFF0284C7),
-    disabled: Color(0xFFD1D5DB),
+    onSurface: Color(0xFF0A0A0A),
+    background: Color(0xFFF2F5F8),
+    border: Color(0xFFB0BEC5),
+    muted: Color(0xFF455A64),
+    danger: Color(0xFFD32F2F),
+    success: Color(0xFF2E7D32),
+    warning: Color(0xFFE65100),
+    info: Color(0xFF0097C7),
+    disabled: Color(0xFFB0BEC5),
+    accentGlow: Color(0x6600CCFF),
   );
 
   static const dark = SharedUiColors(
-    primary: Color(0xFF3B82F6),
-    onPrimary: Color(0xFFFFFFFF),
-    secondary: Color(0xFF1F2937),
-    onSecondary: Color(0xFFF9FAFB),
-    surface: Color(0xFF111827),
-    onSurface: Color(0xFFF9FAFB),
-    background: Color(0xFF0B1220),
-    border: Color(0xFF374151),
-    muted: Color(0xFF9CA3AF),
-    danger: Color(0xFFEF4444),
-    success: Color(0xFF22C55E),
-    warning: Color(0xFFF59E0B),
-    info: Color(0xFF38BDF8),
-    disabled: Color(0xFF4B5563),
+    primary: brandCyan,
+    onPrimary: Color(0xFF000000),
+    secondary: Color(0xFF1A1A1A),
+    onSecondary: Color(0xFFF0F0F0),
+    surface: Color(0xFF141414),
+    onSurface: Color(0xFFF5F5F5),
+    background: Color(0xFF000000),
+    border: Color(0xFF3D3D3D),
+    muted: Color(0xFF9E9E9E),
+    danger: Color(0xFFEF5350),
+    success: Color(0xFF66BB6A),
+    warning: Color(0xFFFFB74D),
+    info: brandCyan,
+    disabled: Color(0xFF4A4A4A),
+    accentGlow: Color(0x8800CCFF),
+  );
+
+  /// Turanta consumer brand — black-dominant canvas, cyan as sharp accent,
+  /// crisp light surfaces for content cards (asymmetric overlap layouts).
+  static const turanta = SharedUiColors(
+    primary: brandCyan,
+    onPrimary: Color(0xFF000000),
+    secondary: Color(0xFF101010),
+    onSecondary: Color(0xFFE8F9FF),
+    surface: Color(0xFFFAFCFD),
+    onSurface: Color(0xFF050505),
+    background: Color(0xFF000000),
+    border: Color(0xFF2A2A2A),
+    muted: Color(0xFF8A9399),
+    danger: Color(0xFFFF5252),
+    success: Color(0xFF69F0AE),
+    warning: Color(0xFFFFAB40),
+    info: brandCyan,
+    disabled: Color(0xFF3A3A3A),
+    accentGlow: Color(0x9900CCFF),
   );
 }
 
 @immutable
 class SharedUiSpacing {
   const SharedUiSpacing({
-    this.xs = 4,
-    this.sm = 8,
-    this.md = 12,
-    this.lg = 16,
-    this.xl = 24,
-    this.xxl = 32,
+    this.xs = 6,
+    this.sm = 10,
+    this.md = 16,
+    this.lg = 20,
+    this.xl = 28,
+    this.xxl = 40,
   });
 
   final double xs;
@@ -95,28 +122,37 @@ class SharedUiSpacing {
 @immutable
 class SharedUiRadius {
   const SharedUiRadius({
-    this.sm = 6,
-    this.md = 10,
-    this.lg = 16,
+    this.sm = 8,
+    this.md = 12,
+    this.lg = 18,
     this.pill = 999,
+    this.asymmetric = const BorderRadius.only(
+      topLeft: Radius.circular(22),
+      topRight: Radius.circular(10),
+      bottomLeft: Radius.circular(14),
+      bottomRight: Radius.circular(22),
+    ),
   });
 
   final double sm;
   final double md;
   final double lg;
   final double pill;
+  final BorderRadius asymmetric;
 }
 
 @immutable
 class SharedUiTypography {
   const SharedUiTypography({
-    this.title = const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, height: 1.25),
-    this.body = const TextStyle(fontSize: 14, height: 1.4),
-    this.label = const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-    this.caption = const TextStyle(fontSize: 12, height: 1.3),
-    this.button = const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+    this.display = const TextStyle(fontSize: 32, fontWeight: FontWeight.w800, height: 1.1),
+    this.title = const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.25),
+    this.body = const TextStyle(fontSize: 16, height: 1.45),
+    this.label = const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+    this.caption = const TextStyle(fontSize: 13, height: 1.35),
+    this.button = const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
   });
 
+  final TextStyle display;
   final TextStyle title;
   final TextStyle body;
   final TextStyle label;

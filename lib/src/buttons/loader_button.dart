@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../motion/pressable_scale.dart';
 import '../theme/shared_ui_theme.dart';
 
 /// Visual style of a [LoaderButton].
@@ -43,6 +44,7 @@ class LoaderButton extends StatelessWidget {
     final theme = SharedUiTheme.of(context);
     final colors = theme.colors;
 
+    final useGradient = variant == SharedButtonVariant.primary && _interactive;
     final bg = switch (variant) {
       SharedButtonVariant.primary => colors.primary,
       SharedButtonVariant.secondary => colors.secondary,
@@ -57,9 +59,9 @@ class LoaderButton extends StatelessWidget {
     };
 
     final (vPad, hPad, minHeight, spinnerSize) = switch (size) {
-      SharedButtonSize.sm => (6.0, 12.0, 32.0, 14.0),
-      SharedButtonSize.md => (10.0, 16.0, 40.0, 18.0),
-      SharedButtonSize.lg => (14.0, 20.0, 48.0, 22.0),
+      SharedButtonSize.sm => (theme.spacing.sm, theme.spacing.md, 36.0, 16.0),
+      SharedButtonSize.md => (theme.spacing.md, theme.spacing.lg, 48.0, 20.0),
+      SharedButtonSize.lg => (theme.spacing.lg, theme.spacing.xl, 56.0, 24.0),
     };
 
     final effectiveBg = _interactive ? bg : bg.withValues(alpha: 0.5);
@@ -86,16 +88,32 @@ class LoaderButton extends StatelessWidget {
             ],
           );
 
-    return Semantics(
-      button: true,
-      enabled: _interactive,
-      label: label,
+    final radius = BorderRadius.circular(theme.radius.md);
+    final glow = variant == SharedButtonVariant.primary && _interactive
+        ? [
+            BoxShadow(
+              color: colors.accentGlow,
+              blurRadius: 20,
+              offset: const Offset(0, 6),
+            ),
+          ]
+        : null;
+
+    final surface = DecoratedBox(
+      decoration: BoxDecoration(
+        color: useGradient ? null : effectiveBg,
+        gradient: useGradient ? theme.gradients.primaryButton : null,
+        borderRadius: radius,
+        boxShadow: glow,
+      ),
       child: Material(
-        color: effectiveBg,
-        borderRadius: BorderRadius.circular(theme.radius.md),
+        type: MaterialType.transparency,
+        borderRadius: radius,
         child: InkWell(
           onTap: _interactive ? onPressed : null,
-          borderRadius: BorderRadius.circular(theme.radius.md),
+          borderRadius: radius,
+          splashColor: effectiveFg.withValues(alpha: 0.12),
+          highlightColor: effectiveFg.withValues(alpha: 0.06),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: minHeight),
             child: Padding(
@@ -104,6 +122,16 @@ class LoaderButton extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+
+    return Semantics(
+      button: true,
+      enabled: _interactive,
+      label: label,
+      child: PressableScale(
+        enabled: _interactive,
+        child: surface,
       ),
     );
   }
@@ -134,9 +162,9 @@ class LoaderIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = SharedUiTheme.of(context);
     final dim = switch (size) {
-      SharedButtonSize.sm => 32.0,
-      SharedButtonSize.md => 40.0,
-      SharedButtonSize.lg => 48.0,
+      SharedButtonSize.sm => 36.0,
+      SharedButtonSize.md => 48.0,
+      SharedButtonSize.lg => 56.0,
     };
     final iconSize = dim * 0.5;
     final interactive = !isLoading && !isDisabled && onPressed != null;
@@ -154,26 +182,29 @@ class LoaderIconButton extends StatelessWidget {
       SharedButtonVariant.danger => theme.colors.onPrimary,
     };
 
-    final btn = Material(
-      color: interactive ? bg : bg.withValues(alpha: 0.5),
-      shape: const CircleBorder(),
-      child: InkWell(
-        onTap: interactive ? onPressed : null,
-        customBorder: const CircleBorder(),
-        child: SizedBox(
-          width: dim,
-          height: dim,
-          child: Center(
-            child: isLoading
-                ? SizedBox(
-                    width: iconSize,
-                    height: iconSize,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation(fg),
-                    ),
-                  )
-                : Icon(icon, size: iconSize, color: interactive ? fg : fg.withValues(alpha: 0.7)),
+    final btn = PressableScale(
+      enabled: interactive,
+      child: Material(
+        color: interactive ? bg : bg.withValues(alpha: 0.5),
+        shape: const CircleBorder(),
+        child: InkWell(
+          onTap: interactive ? onPressed : null,
+          customBorder: const CircleBorder(),
+          child: SizedBox(
+            width: dim,
+            height: dim,
+            child: Center(
+              child: isLoading
+                  ? SizedBox(
+                      width: iconSize,
+                      height: iconSize,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation(fg),
+                      ),
+                    )
+                  : Icon(icon, size: iconSize, color: interactive ? fg : fg.withValues(alpha: 0.7)),
+            ),
           ),
         ),
       ),

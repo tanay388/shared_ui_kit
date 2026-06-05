@@ -37,8 +37,8 @@ class SuperListTile extends StatelessWidget {
         onTap: isLoading ? null : onTap,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: theme.spacing.md,
-            vertical: theme.spacing.md,
+            horizontal: theme.spacing.lg,
+            vertical: theme.spacing.lg,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,13 +51,16 @@ class SuperListTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: theme.typography.label
-                          .copyWith(color: theme.colors.onSurface),
+                      style: theme.typography.body
+                          .copyWith(
+                            color: theme.colors.onSurface,
+                            fontWeight: FontWeight.w600,
+                          ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     if (subtitle != null) ...[
-                      SizedBox(height: theme.spacing.xs / 2),
+                      SizedBox(height: theme.spacing.xs),
                       Text(
                         subtitle!,
                         style: theme.typography.caption

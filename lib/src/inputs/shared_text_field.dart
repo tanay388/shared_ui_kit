@@ -69,11 +69,11 @@ class SharedTextField extends StatelessWidget {
 
     Widget? suffix = suffixIcon;
     if (isLoading) {
-      suffix = const Padding(
-        padding: EdgeInsets.all(10),
-        child: SizedBox(
-          width: 16,
-          height: 16,
+      suffix = Padding(
+        padding: EdgeInsets.all(theme.spacing.sm),
+        child: const SizedBox(
+          width: 20,
+          height: 20,
           child: CircularProgressIndicator(strokeWidth: 2),
         ),
       );
@@ -96,14 +96,14 @@ class SharedTextField extends StatelessWidget {
         hintStyle: theme.typography.body.copyWith(color: theme.colors.muted),
         prefixIcon: prefixIcon == null
             ? null
-            : Icon(prefixIcon, size: 18, color: theme.colors.muted),
+            : Icon(prefixIcon, size: 22, color: theme.colors.muted),
         suffixIcon: suffix,
         filled: true,
         fillColor: isDisabled
             ? theme.colors.disabled.withValues(alpha: 0.2)
             : theme.colors.surface,
         contentPadding: EdgeInsets.symmetric(
-          horizontal: theme.spacing.md,
+          horizontal: theme.spacing.lg,
           vertical: theme.spacing.md,
         ),
         enabledBorder: OutlineInputBorder(
@@ -112,7 +112,7 @@ class SharedTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(theme.radius.md),
-          borderSide: BorderSide(color: theme.colors.primary, width: 1.5),
+          borderSide: BorderSide(color: theme.colors.primary, width: 2),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(theme.radius.md),
@@ -124,7 +124,7 @@ class SharedTextField extends StatelessWidget {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(theme.radius.md),
-          borderSide: BorderSide(color: theme.colors.danger, width: 1.5),
+          borderSide: BorderSide(color: theme.colors.danger, width: 2),
         ),
       ),
     );
@@ -137,11 +137,11 @@ class SharedTextField extends StatelessWidget {
         if (label != null) ...[
           Text(label!,
               style: theme.typography.label.copyWith(color: theme.colors.onSurface)),
-          SizedBox(height: theme.spacing.xs),
+          SizedBox(height: theme.spacing.sm),
         ],
         field,
         if (helperText != null) ...[
-          SizedBox(height: theme.spacing.xs),
+          SizedBox(height: theme.spacing.sm),
           Text(helperText, style: theme.typography.caption.copyWith(color: helperColor)),
         ],
       ],
@@ -203,7 +203,7 @@ class _SharedPasswordFieldState extends State<SharedPasswordField> {
         icon: Icon(
           _visible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
           color: theme.colors.muted,
-          size: 18,
+          size: 22,
         ),
         onPressed: widget.isDisabled
             ? null

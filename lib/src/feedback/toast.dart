@@ -39,7 +39,7 @@ class SharedToast {
         ),
         content: Row(
           children: [
-            Icon(icon, color: fg, size: 18),
+            Icon(icon, color: fg, size: 22),
             SizedBox(width: theme.spacing.sm),
             Expanded(
               child: Text(
