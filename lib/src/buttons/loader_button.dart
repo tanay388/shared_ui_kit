@@ -56,14 +56,18 @@ class LoaderButton extends StatelessWidget {
       SharedButtonVariant.danger => colors.onPrimary,
     };
 
-    final (vPad, hPad, minHeight, spinnerSize) = switch (size) {
-      SharedButtonSize.sm => (theme.spacing.sm, theme.spacing.md, 36.0, 16.0),
-      SharedButtonSize.md => (theme.spacing.md, theme.spacing.lg, 48.0, 20.0),
-      SharedButtonSize.lg => (theme.spacing.lg, theme.spacing.xl, 56.0, 24.0),
+    final (vPad, hPad, minHeight, spinnerSize, fontSize) = switch (size) {
+      SharedButtonSize.sm => (6.0, theme.spacing.sm, 32.0, 14.0, 13.0),
+      SharedButtonSize.md => (theme.spacing.md, theme.spacing.lg, 48.0, 20.0, null),
+      SharedButtonSize.lg => (theme.spacing.lg, theme.spacing.xl, 56.0, 24.0, null),
     };
 
     final effectiveBg = _interactive ? bg : bg.withValues(alpha: 0.5);
     final effectiveFg = _interactive ? fg : fg.withValues(alpha: 0.7);
+    final labelStyle = theme.typography.button.copyWith(
+      color: effectiveFg,
+      fontSize: fontSize,
+    );
 
     final child = isLoading
         ? SizedBox(
@@ -74,16 +78,24 @@ class LoaderButton extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation(effectiveFg),
             ),
           )
-        : Row(
-            mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: spinnerSize, color: effectiveFg),
-                SizedBox(width: theme.spacing.sm),
+        : FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, size: spinnerSize, color: effectiveFg),
+                  SizedBox(width: theme.spacing.xs),
+                ],
+                Text(
+                  label,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: labelStyle,
+                ),
               ],
-              Text(label, style: theme.typography.button.copyWith(color: effectiveFg)),
-            ],
+            ),
           );
 
     return Semantics(
@@ -100,7 +112,10 @@ class LoaderButton extends StatelessWidget {
             constraints: BoxConstraints(minHeight: minHeight),
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: vPad, horizontal: hPad),
-              child: Center(widthFactor: expand ? null : 1, child: child),
+              child: Center(
+                widthFactor: expand ? null : 1,
+                child: child,
+              ),
             ),
           ),
         ),

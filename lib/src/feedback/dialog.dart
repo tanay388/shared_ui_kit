@@ -92,8 +92,11 @@ class _SharedDialogState extends State<_SharedDialog> {
               ),
             ],
             SizedBox(height: theme.spacing.xl),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            // Wrap avoids overflow when labels are long (e.g. "Yes, cancel").
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: theme.spacing.sm,
+              runSpacing: theme.spacing.sm,
               children: [
                 LoaderButton(
                   label: widget.cancelLabel,
@@ -101,7 +104,6 @@ class _SharedDialogState extends State<_SharedDialog> {
                   isDisabled: _busy,
                   onPressed: () => Navigator.of(context).pop(false),
                 ),
-                SizedBox(width: theme.spacing.sm),
                 LoaderButton(
                   label: widget.confirmLabel,
                   variant: widget.tone == SharedDialogTone.danger
