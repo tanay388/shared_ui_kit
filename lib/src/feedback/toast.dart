@@ -1,25 +1,23 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../theme/shared_ui_theme.dart';
 
-/// What a toast is telling you. Drives the icon and the accent, never the
-/// whole background — see [SharedToast].
+/// What a toast is telling you. Drives the fill — see [SharedToast].
 enum ToastTone { neutral, success, danger, warning, info }
 
 /// Floating toast on the kit's tokens.
 ///
 /// Built on [ScaffoldMessenger] so it survives navigation and queues with
-/// anything else already showing, but it does not look like a [SnackBar]: the
-/// card is the surface colour with a coloured icon, rather than a saturated
-/// slab of green or red.
+/// anything else showing, but it does not look like a [SnackBar]: the bar
+/// itself is transparent and shapeless, and the card inside draws everything.
+/// Both have to be set — a transparent background with the default shape still
+/// paints a square edge behind the rounded card.
 ///
-/// That is the legibility argument as much as the aesthetic one. White on
-/// `warning` is around 2:1, and a full-bleed danger fill makes an ordinary
-/// "check your connection" read like a crash. The accent stays on the icon and
-/// the rule beside it, where it identifies the message without shouting it.
-///
-/// Requires an ancestor [ScaffoldMessenger] (the default [MaterialApp] ships
-/// one).
+/// The fill carries the tone, and the brand primary is the default, so the
+/// toast a customer sees most often is the brand's colour rather than a white
+/// slab. Neutral and info both land on primary for that reason.
 class SharedToast {
   SharedToast._();
 
@@ -35,30 +33,38 @@ class SharedToast {
     final theme = SharedUiTheme.of(context);
     final colors = theme.colors;
 
-    final (accent, icon) = switch (tone) {
-      ToastTone.neutral => (colors.onSurface, Icons.info_outline_rounded),
+    final (fill, icon) = switch (tone) {
+      ToastTone.neutral => (colors.primary, Icons.info_rounded),
+      ToastTone.info => (colors.primary, Icons.info_rounded),
       ToastTone.success => (colors.success, Icons.check_circle_rounded),
       ToastTone.danger => (colors.danger, Icons.error_rounded),
       ToastTone.warning => (colors.warning, Icons.warning_amber_rounded),
-      ToastTone.info => (colors.info, Icons.info_rounded),
     };
 
+    // Chosen against the fill rather than fixed: white on the brand cyan is
+    // 1.8:1 and on the info blue 3.4:1, so a toast with hard-coded white ink
+    // is unreadable on exactly the tones used most.
+    final ink = _readableOn(fill, colors.onSurface);
+
     final messenger = ScaffoldMessenger.of(context)..hideCurrentSnackBar();
+    final radius = BorderRadius.circular(theme.radius.lg);
 
     messenger.showSnackBar(
       SnackBar(
-        // The card draws itself, so the SnackBar is only a delivery mechanism.
         backgroundColor: Colors.transparent,
         elevation: 0,
         padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: radius),
         behavior: SnackBarBehavior.floating,
         duration: duration,
         dismissDirection: DismissDirection.horizontal,
         content: _ToastCard(
           message: message,
           title: title,
-          accent: accent,
+          fill: fill,
+          ink: ink,
           icon: icon,
+          radius: radius,
           actionLabel: actionLabel,
           onAction: onAction == null
               ? null
@@ -70,110 +76,121 @@ class SharedToast {
       ),
     );
   }
+
+  /// Whichever of white or [dark] reads better on [fill].
+  static Color _readableOn(Color fill, Color dark) =>
+      _contrast(fill, Colors.white) >= _contrast(fill, dark)
+      ? Colors.white
+      : dark;
+
+  static double _contrast(Color a, Color b) {
+    final la = a.computeLuminance();
+    final lb = b.computeLuminance();
+    return (math.max(la, lb) + 0.05) / (math.min(la, lb) + 0.05);
+  }
 }
 
 class _ToastCard extends StatelessWidget {
   const _ToastCard({
     required this.message,
     required this.title,
-    required this.accent,
+    required this.fill,
+    required this.ink,
     required this.icon,
+    required this.radius,
     required this.actionLabel,
     required this.onAction,
   });
 
   final String message;
   final String? title;
-  final Color accent;
+  final Color fill;
+  final Color ink;
   final IconData icon;
+  final BorderRadius radius;
   final String? actionLabel;
   final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
     final theme = SharedUiTheme.of(context);
-    final colors = theme.colors;
 
     return Container(
       decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(theme.radius.lg),
+        color: fill,
+        borderRadius: radius,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.16),
+            color: Colors.black.withValues(alpha: 0.18),
             blurRadius: 18,
             offset: const Offset(0, 6),
           ),
         ],
       ),
       clipBehavior: Clip.antiAlias,
-      child: IntrinsicHeight(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: theme.spacing.md,
+          vertical: theme.spacing.sm + 2,
+        ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Carries the tone down the full height, so a two-line message
-            // still reads as one coloured block rather than an icon adrift.
-            Container(width: 4, color: accent),
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                theme.spacing.sm + 2,
-                theme.spacing.sm + 2,
-                0,
-                theme.spacing.sm + 2,
-              ),
-              child: Icon(icon, color: accent, size: 20),
-            ),
+            Icon(icon, color: ink, size: 20),
+            SizedBox(width: theme.spacing.sm),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: theme.spacing.sm,
-                  vertical: theme.spacing.sm + 2,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (title != null)
-                      Text(
-                        title!,
-                        style: theme.typography.label.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          height: 1.25,
-                          color: colors.onSurface,
-                        ),
-                      ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (title != null)
                     Text(
-                      message,
-                      style: theme.typography.body.copyWith(
-                        fontSize: 13.5,
-                        height: 1.3,
-                        color: title == null ? colors.onSurface : colors.muted,
+                      title!,
+                      style: theme.typography.label.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        height: 1.25,
+                        color: ink,
                       ),
                     ),
-                  ],
-                ),
+                  Text(
+                    message,
+                    style: theme.typography.body.copyWith(
+                      fontSize: 13.5,
+                      height: 1.3,
+                      fontWeight: title == null
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                      // Softened only under a title, where the title is
+                      // carrying the emphasis.
+                      color: title == null ? ink : ink.withValues(alpha: 0.85),
+                    ),
+                  ),
+                ],
               ),
             ),
-            if (actionLabel != null)
-              Padding(
-                padding: EdgeInsets.only(right: theme.spacing.xs),
-                child: TextButton(
-                  onPressed: onAction,
-                  style: TextButton.styleFrom(
-                    foregroundColor: accent,
-                    visualDensity: VisualDensity.compact,
+            if (actionLabel != null) ...[
+              SizedBox(width: theme.spacing.xs),
+              TextButton(
+                onPressed: onAction,
+                style: TextButton.styleFrom(
+                  foregroundColor: ink,
+                  visualDensity: VisualDensity.compact,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: theme.spacing.sm,
                   ),
-                  child: Text(
-                    actionLabel!,
-                    style: theme.typography.label.copyWith(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                      color: accent,
-                    ),
+                ),
+                child: Text(
+                  actionLabel!,
+                  style: theme.typography.label.copyWith(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: ink,
+                    decoration: TextDecoration.underline,
+                    decorationColor: ink,
                   ),
                 ),
               ),
+            ],
           ],
         ),
       ),
